@@ -2,8 +2,6 @@ import React, { Fragment, useReducer, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
 import Skeleton from '@material-ui/lab/Skeleton';
-
-// apis
 import { fetchRestaurants } from '../apis/restaurants';
 
 import {
@@ -13,8 +11,6 @@ import {
 } from '../reducers/restaurants';
 
 import { REQUEST_STATE } from '../constants';
-
-// images
 import MainLogo from '../images/logo.png';
 import MainCoverImage from '../images/main-cover-image.png';
 import RestaurantImage from '../images/restaurant-image.png';

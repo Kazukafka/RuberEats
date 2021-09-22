@@ -1,4 +1,3 @@
-// --- ここから追加 ---
 import axios from 'axios';
 import { foodsIndex } from '../urls/index'
 
@@ -9,4 +8,3 @@ export const fetchFoods = (restaurantId) => {
     })
     .catch((e) => console.error(e))
 }
-// --- ここまで追加 ---
