@@ -15,6 +15,14 @@ import styled from 'styled-components';
 import { COLORS } from '../style_constants';
 import { LocalMallIcon } from '../components/Icons';
 
+import { useHistory, Link } from "react-router-dom";
+
+import { NewOrderConfirmDialog } from '../components/NewOrderConfirmDialog';
+
+import { postLineFoods, replaceLineFoods } from '../apis/line_foods';
+
+import { HTTP_STATUS_CODE } from '../constants';
+
 import {
   initialState as foodsInitialState,
   foodsActionTyps,
@@ -32,13 +40,45 @@ const submitOrder = () => {
 export const Foods = ({
   match
 }) => {
+  const history = useHistory();
   const [foodsState, dispatch] = useReducer(foodsReducer, foodsInitialState);
 
   const initialState = {
     isOpenOrderDialog: false,
     selectedFood: null,
     selectedFoodCount: 1,
-  }
+    isOpenNewOrderDialog: false,
+    existingResutaurautName: '',
+    newResutaurautName: '',
+  };
+
+  const submitOrder = () => {
+    postLineFoods({
+      foodId: state.selectedFood.id,
+      count: state.selectedFoodCount,
+    }).then(() => history.push('/orders'))
+      .catch((e) => {
+        if (e.response.status === HTTP_STATUS_CODE.NOT_ACCEPTABLE) {
+          setState({
+            ...state,
+            isOpenOrderDialog: false,
+            isOpenNewOrderDialog: true,
+            existingResutaurautName: e.response.data.existing_restaurant,
+            newResutaurautName: e.response.data.new_restaurant,
+          })
+        } else {
+          throw e;
+        }
+      })
+  };
+
+  const replaceOrder = () => {
+    replaceLineFoods({
+      foodId: state.selectedFood.id,
+      count: state.selectedFoodCount,
+    }).then(() => history.push('/orders'))
+  };
+
   const [state, setState] = useState(initialState);
 
   useEffect(() => {
@@ -96,6 +136,16 @@ export const Foods = ({
             )
         }
       </FoodsList>
+      {
+        state.isOpenNewOrderDialog &&
+        <NewOrderConfirmDialog
+          isOpen={state.isOpenNewOrderDialog}
+          onClose={() => setState({ ...state, isOpenNewOrderDialog: false })}
+          existingResutaurautName={state.existingResutaurautName}
+          newResutaurautName={state.newResutaurautName}
+          onClickSubmit={() => replaceOrder()}
+        />
+      }
       {
         state.isOpenOrderDialog &&
         <FoodOrderDialog
