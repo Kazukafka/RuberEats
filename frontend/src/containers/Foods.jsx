@@ -15,7 +15,7 @@ import styled from 'styled-components';
 import { COLORS } from '../style_constants';
 import { LocalMallIcon } from '../components/Icons';
 
-import { useHistory, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import { NewOrderConfirmDialog } from '../components/NewOrderConfirmDialog';
 
